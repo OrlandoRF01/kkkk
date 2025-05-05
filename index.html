@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>¡Feliz Cumpleaños!</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(#fefcea, #f1da36);
+            font-family: 'Comic Sans MS', cursive;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #ff4081;
+            animation: bounce 2s infinite;
+            margin-top: 30px;
+            padding: 0 15px;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .balloon {
+            width: 50px;
+            height: 70px;
+            background-color: #ff4081;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -100px;
+            animation: floatUp 10s infinite linear;
+        }
+
+        .balloon::after {
+            content: '';
+            width: 2px;
+            height: 40px;
+            background: #555;
+            position: absolute;
+            left: 50%;
+            top: 100%;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-110vh) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: red;
+            top: -10px;
+            animation: fall 4s linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: rotate(0deg);
+                top: -10px;
+            }
+
+            100% {
+                transform: rotate(360deg);
+                top: 110vh;
+            }
+        }
+
+        .card {
+            width: 90%;
+            max-width: 320px;
+            height: 200px;
+            background: white;
+            margin: 50px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transform: rotateY(0);
+            transition: transform 1s;
+            cursor: pointer;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: rotateY(180deg);
+            background: #ffe4e1;
+        }
+
+        .card-content {
+            font-size: 1.2em;
+            color: #444;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .footer {
+            text-align: center;
+            margin: 20px;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        #playBtn {
+            display: block;
+            margin: 0 auto 20px auto;
+            padding: 10px 20px;
+            background-color: #ff4081;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 1em;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s;
+        }
+
+        #playBtn:hover {
+            background-color: #e91e63;
+        }
+
+        @media (max-width: 500px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .card {
+                height: auto;
+                padding: 15px;
+            }
+
+            .card-content {
+                font-size: 1em;
+            }
+
+            #playBtn {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🎂 ¡Feliz Cumpleaños, Amiga! 🎂</h1>
+
+    <button id="playBtn">▶ Reproducir canción</button>
+
+    <div class="card">
+        <div class="card-content">
+            Espero que tengas un día maravilloso lleno de alegría, amor y mucha diversión. 🎈🎉💖
+        </div>
+    </div>
+
+    <div class="footer">Con cariño, [Tu nombre]</div>
+
+    <audio id="bdaySong" preload="auto">
+        <source src="https://archive.org/download/cepillin_201910/08-LAS%20MA%C3%91ANITAS.ogg" type="audio/mp3">
+        Tu navegador no soporta audio.
+    </audio>
+
+    <script>
+        // Globos
+        for (let i = 0; i < 20; i++) {
+            let b = document.createElement('div');
+            b.classList.add('balloon');
+            b.style.left = Math.random() * 100 + 'vw';
+            b.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+            b.style.animationDuration = 5 + Math.random() * 5 + 's';
+            document.body.appendChild(b);
+        }
+
+        // Confetti
+        for (let i = 0; i < 100; i++) {
+            let c = document.createElement('div');
+            c.classList.add('confetti');
+            c.style.left = Math.random() * 100 + 'vw';
+            c.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            c.style.animationDuration = 2 + Math.random() * 3 + 's';
+            c.style.width = Math.random() * 5 + 3 + 'px';
+            c.style.height = c.style.width;
+            document.body.appendChild(c);
+        }
+
+        // Música
+        const playBtn = document.getElementById('playBtn');
+        const audio = document.getElementById('bdaySong');
+
+        playBtn.addEventListener('click', () => {
+            audio.play();
+            playBtn.textContent = "🎶 Reproduciendo...";
+            playBtn.disabled = true;
+        });
+    </script>
+</body>
+
+</html>
