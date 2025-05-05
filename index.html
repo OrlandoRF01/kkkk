@@ -99,8 +99,11 @@
             border-radius: 50%;
             position: absolute;
             bottom: -100px;
-            animation: floatUp 15s infinite linear;
+            animation: floatUp 15s linear;
             filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+            opacity: 0;
+            /* Comienza invisible */
+            animation-fill-mode: forwards;
         }
 
         .balloon::before {
@@ -131,6 +134,7 @@
 
             50% {
                 transform: translateY(-50vh) translateX(calc(var(--drift) * 50px)) rotate(calc(var(--drift) * 20deg));
+                opacity: 1;
             }
 
             100% {
@@ -144,7 +148,10 @@
             width: 10px;
             height: 10px;
             top: -10px;
-            animation: fall 8s linear infinite;
+            animation: fall 8s linear;
+            opacity: 0;
+            /* Comienza invisible */
+            animation-fill-mode: forwards;
         }
 
         @keyframes fall {
@@ -156,6 +163,7 @@
 
             50% {
                 opacity: 1;
+                transform: rotate(180deg) translateX(calc(var(--drift) * 100px));
             }
 
             100% {
@@ -377,7 +385,7 @@
         /* Responsive styles */
         @media (max-width: 500px) {
             h1 {
-                font-size: 1.5em;
+                font-size: 1.8em;
             }
 
             .card-container {
@@ -471,7 +479,7 @@
 
 <body>
     <div class="container">
-        <h1><span class="cake-emoji">🎂</span> ¡Feliz Cumpleaños! <span class="cake-emoji">🎂</span></h1>
+        <h1><span class="cake-emoji"></span>  <span class="cake-emoji"></span></h1>
 
         <button id="playBtn">
             <span id="playText">▶ Da click mi vro</span>
@@ -486,7 +494,7 @@
             <div class="card" id="card">
                 <div class="card-face card-front">
                     <p></p>
-                    <div class="flip-indicator">De nuevo da click mi vro↓</div>
+                    <div class="flip-indicator">De nuevo da click mi vro ↓</div>
                 </div>
                 <div class="card-face card-back">
                     <img src="img.jpg" alt="Feliz cumpleaños">
@@ -495,7 +503,7 @@
         </div>
 
         <a href="https://vt.tiktok.com/ZShMDyG43/" class="footer" target="_blank"
-            style="text-decoration: none; cursor: pointer;">otra ves da click mi vro</a>
+            style="text-decoration: none; cursor: pointer;">otra vez da click mi vro</a>
     </div>
 
     <audio id="bdaySong" preload="auto">
@@ -504,7 +512,7 @@
     </audio>
 
     <script>
-        // Globos con colores y movimientos variados
+        // Definir colores y formas para animaciones
         const balloonColors = [
             'linear-gradient(135deg, #ff6b6b, #ff8e8e)',
             'linear-gradient(135deg, #54a0ff, #2e86de)',
@@ -513,24 +521,34 @@
             'linear-gradient(135deg, #5f27cd, #341f97)',
             'linear-gradient(135deg, #ff9ff3, #f368e0)'
         ];
+        const confettiShapes = ['★', '■', '●', '♦', '♥', '<img src="gato.jpg" style="width: 50px; height: auto;">'];
+        const confettiColors = ['#ff4081', '#3dc2ff', '#ffeb3b', '#4caf50', '#9c27b0', '#ff9800'];
 
-        for (let i = 0; i < 15; i++) {
+        // Variables para controlar las animaciones
+        let animationsStarted = false;
+        let animationInterval;
+
+        // Función para crear un globo
+        function createBalloon() {
             let b = document.createElement('div');
             b.classList.add('balloon');
             b.style.left = Math.random() * 100 + 'vw';
             b.style.background = balloonColors[Math.floor(Math.random() * balloonColors.length)];
             b.style.animationDuration = 8 + Math.random() * 10 + 's';
             b.style.setProperty('--drift', (Math.random() * 2 - 1).toString());
-            b.style.animationDelay = Math.random() * 5 + 's';
             b.style.scale = 0.7 + Math.random() * 0.6;
             document.body.appendChild(b);
+
+            // Eliminar el globo después de que termine su animación
+            setTimeout(() => {
+                if (b && b.parentNode) {
+                    b.parentNode.removeChild(b);
+                }
+            }, parseFloat(b.style.animationDuration) * 1000);
         }
 
-        // Confetti con formas y colores variados
-        const confettiShapes = ['★', '■', '●', '♦', '♥'];
-        const confettiColors = ['#ff4081', '#3dc2ff', '#ffeb3b', '#4caf50', '#9c27b0', '#ff9800'];
-
-        for (let i = 0; i < 80; i++) {
+        // Función para crear confeti
+        function createConfetti() {
             let isShape = Math.random() > 0.5;
 
             let c = document.createElement('div');
@@ -554,8 +572,41 @@
 
             c.style.animationDuration = 3 + Math.random() * 5 + 's';
             c.style.setProperty('--drift', (Math.random() * 2 - 1).toString());
-            c.style.animationDelay = Math.random() * 5 + 's';
             document.body.appendChild(c);
+
+            // Eliminar el confeti después de que termine su animación
+            setTimeout(() => {
+                if (c && c.parentNode) {
+                    c.parentNode.removeChild(c);
+                }
+            }, parseFloat(c.style.animationDuration) * 1000);
+        }
+
+        // Función para iniciar las animaciones
+        function startAnimations() {
+            if (animationsStarted) return;
+
+            animationsStarted = true;
+
+            // Crear la ráfaga inicial de globos y confeti
+            for (let i = 0; i < 15; i++) {
+                createBalloon();
+            }
+
+            for (let i = 0; i < 80; i++) {
+                createConfetti();
+            }
+
+            // Establecer intervalos para seguir creando animaciones
+            setInterval(() => {
+                createBalloon();
+            }, 2000);
+
+            setInterval(() => {
+                for (let i = 0; i < 3; i++) {
+                    createConfetti();
+                }
+            }, 500);
         }
 
         // Música con animación
@@ -564,7 +615,17 @@
         const playText = document.getElementById('playText');
         const musicBars = document.getElementById('musicBars');
 
+        // Primera vez que se hace clic en el botón
+        let firstClick = true;
+
         playBtn.addEventListener('click', () => {
+            // Si es el primer clic, iniciar las animaciones
+            if (firstClick) {
+                startAnimations();
+                firstClick = false;
+            }
+
+            // Controlar la reproducción de audio
             if (audio.paused) {
                 audio.play();
                 playText.textContent = "🎶 Reproduciendo";
