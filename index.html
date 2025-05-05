@@ -8,186 +8,495 @@
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            background: linear-gradient(#fefcea, #f1da36);
-            font-family: 'Comic Sans MS', cursive;
+            background: linear-gradient(135deg, #ffd1ff, #faf0d7, #ffe9e3, #c4f5fc);
+            background-size: 400% 400%;
+            animation: gradient-bg 15s ease infinite;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow-x: hidden;
+            padding: 20px 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        @keyframes gradient-bg {
+            0% {
+                background-position: 0% 50%
+            }
+
+            50% {
+                background-position: 100% 50%
+            }
+
+            100% {
+                background-position: 0% 50%
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
         }
 
         h1 {
             text-align: center;
-            font-size: 2.5em;
-            color: #ff4081;
-            animation: bounce 2s infinite;
-            margin-top: 30px;
+            font-size: 2.2em;
+            font-weight: 800;
+            color: transparent;
+            background: linear-gradient(45deg, #ff4081, #ff9b3d, #3dc2ff, #a64dff);
+            background-size: 300% 300%;
+            animation: gradient-text 5s ease infinite, pulse 2s infinite;
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow: 0px 2px 10px rgba(255, 64, 129, 0.3);
+            margin: 15px 0;
             padding: 0 15px;
+            letter-spacing: 1px;
         }
 
-        @keyframes bounce {
-
-            0%,
-            100% {
-                transform: translateY(0);
+        @keyframes gradient-text {
+            0% {
+                background-position: 0% 50%
             }
 
             50% {
-                transform: translateY(-15px);
+                background-position: 100% 50%
+            }
+
+            100% {
+                background-position: 0% 50%
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
             }
         }
 
         .balloon {
-            width: 50px;
-            height: 70px;
-            background-color: #ff4081;
+            width: 60px;
+            height: 80px;
             border-radius: 50%;
             position: absolute;
             bottom: -100px;
-            animation: floatUp 10s infinite linear;
+            animation: floatUp 15s infinite linear;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+        }
+
+        .balloon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8) 5%, transparent 30%);
         }
 
         .balloon::after {
             content: '';
-            width: 2px;
-            height: 40px;
-            background: #555;
+            width: 3px;
+            height: 60px;
+            background: rgba(150, 150, 150, 0.7);
             position: absolute;
             left: 50%;
             top: 100%;
+            transform: translateX(-50%);
         }
 
         @keyframes floatUp {
             0% {
-                transform: translateY(0) translateX(0);
+                transform: translateY(0) translateX(0) rotate(0deg);
                 opacity: 1;
             }
 
+            50% {
+                transform: translateY(-50vh) translateX(calc(var(--drift) * 50px)) rotate(calc(var(--drift) * 20deg));
+            }
+
             100% {
-                transform: translateY(-110vh) translateX(50px);
+                transform: translateY(-110vh) translateX(calc(var(--drift) * 100px)) rotate(calc(var(--drift) * 40deg));
                 opacity: 0;
             }
         }
 
         .confetti {
             position: absolute;
-            width: 8px;
-            height: 8px;
-            background: red;
+            width: 10px;
+            height: 10px;
             top: -10px;
-            animation: fall 4s linear infinite;
+            animation: fall 8s linear infinite;
         }
 
         @keyframes fall {
             0% {
-                transform: rotate(0deg);
+                transform: rotate(0deg) translateX(0);
                 top: -10px;
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 1;
             }
 
             100% {
-                transform: rotate(360deg);
+                transform: rotate(360deg) translateX(calc(var(--drift) * 200px));
                 top: 110vh;
+                opacity: 0;
             }
+        }
+
+        .card-container {
+            width: 90%;
+            max-width: 350px;
+            aspect-ratio: 1.6;
+            margin: 20px auto;
+            perspective: 1200px;
+            transform-style: preserve-3d;
         }
 
         .card {
-            width: 90%;
-            max-width: 320px;
-            height: 200px;
-            background: white;
-            margin: 50px auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            transform: rotateY(0);
-            transition: transform 1s;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
-            padding: 20px;
-            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
-        .card:hover {
+        .card.is-flipped {
             transform: rotateY(180deg);
-            background: #ffe4e1;
         }
 
-        .card-content {
-            font-size: 1.2em;
-            color: #444;
-            animation: fadeIn 2s ease-in-out;
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            text-align: center;
+            overflow: hidden;
         }
 
-        @keyframes fadeIn {
+        .card-front {
+            background: linear-gradient(45deg, #fff, #f8f9fa);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            font-size: 1.3em;
+            font-weight: 500;
+            color: #333;
+            border: 2px dashed #ff4081;
+            /* Importante: Asegura que el frente esté visible solo cuando corresponde */
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .card-front p {
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-front::before {
+            content: "🎁";
+            position: absolute;
+            font-size: 8em;
+            opacity: 0.05;
+            z-index: 1;
+        }
+
+        .card-back {
+            background: #f8e8ff;
+            transform: rotateY(180deg);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            /* Importante: Asegura que la parte trasera esté visible solo cuando corresponde */
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            padding: 0;
+            /* Elimina el padding para que la imagen ocupe todo el espacio */
+        }
+
+        .card-back img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+            animation: zoomIn 1.5s ease forwards;
+            opacity: 0;
+        }
+
+        .card.is-flipped .card-back img {
+            opacity: 1;
+        }
+
+        @keyframes zoomIn {
             from {
-                opacity: 0;
                 transform: scale(0.8);
+                opacity: 0;
             }
 
             to {
-                opacity: 1;
                 transform: scale(1);
+                opacity: 1;
             }
         }
 
         .footer {
             text-align: center;
-            margin: 20px;
-            font-size: 1.1em;
+            margin: 15px 0;
+            font-size: 1.2em;
+            font-weight: 600;
             color: #333;
+            animation: colorchange 5s infinite alternate;
+            padding: 10px 20px;
+            border-radius: 50px;
+            background-color: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: inline-block;
+        }
+
+        .footer:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .footer:active {
+            transform: translateY(0);
+        }
+
+        @keyframes colorchange {
+            0% {
+                color: #ff4081;
+            }
+
+            25% {
+                color: #673ab7;
+            }
+
+            50% {
+                color: #2196f3;
+            }
+
+            75% {
+                color: #4caf50;
+            }
+
+            100% {
+                color: #ff9800;
+            }
         }
 
         #playBtn {
             display: block;
-            margin: 0 auto 20px auto;
-            padding: 10px 20px;
-            background-color: #ff4081;
+            margin: 15px auto;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #ff4081, #ff9b3d);
             color: white;
             border: none;
-            border-radius: 20px;
-            font-size: 1em;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-            transition: background 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 64, 129, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         #playBtn:hover {
-            background-color: #e91e63;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 64, 129, 0.6);
         }
 
-        @media (max-width: 500px) {
-            h1 {
-                font-size: 2em;
+        #playBtn:active {
+            transform: translateY(1px);
+        }
+
+        #playBtn::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s;
+        }
+
+        #playBtn:hover::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .cake-emoji {
+            display: inline-block;
+            animation: bounce 2s ease infinite;
+            transform-origin: bottom;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
             }
 
-            .card {
-                height: auto;
+            50% {
+                transform: translateY(-15px) scale(1.1);
+            }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 500px) {
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .card-container {
+                width: 95%;
+                max-width: 300px;
+                aspect-ratio: 1;
+            }
+
+            .card-front {
+                font-size: 1.1em;
                 padding: 15px;
             }
 
-            .card-content {
+            #playBtn {
+                padding: 12px 25px;
                 font-size: 1em;
             }
 
-            #playBtn {
-                font-size: 0.9em;
+            .container {
+                gap: 10px;
             }
+        }
+
+        /* Indicator to flip card */
+        .flip-indicator {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff4081;
+            font-size: 0.8em;
+            opacity: 0.8;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Music animation */
+        .music-playing {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            justify-content: center;
+            height: 20px;
+            margin-left: 10px;
+        }
+
+        .music-bar {
+            width: 4px;
+            height: 100%;
+            background: white;
+            border-radius: 2px;
+            animation: musicBounce 0.8s ease infinite;
+        }
+
+        .music-bar:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .music-bar:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes musicBounce {
+
+            0%,
+            100% {
+                height: 40%;
+            }
+
+            50% {
+                height: 100%;
+            }
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 
 <body>
+    <div class="container">
+        <h1><span class="cake-emoji">🎂</span> ¡Feliz Cumpleaños! <span class="cake-emoji">🎂</span></h1>
 
-    <h1>🎂 ¡Feliz Cumpleaños, Amiga! 🎂</h1>
+        <button id="playBtn">
+            <span id="playText">▶ Da click mi vro</span>
+            <div class="music-playing hidden" id="musicBars">
+                <div class="music-bar"></div>
+                <div class="music-bar"></div>
+                <div class="music-bar"></div>
+            </div>
+        </button>
 
-    <button id="playBtn">▶ Reproducir canción</button>
-
-    <div class="card">
-        <div class="card-content">
-            Espero que tengas un día maravilloso lleno de alegría, amor y mucha diversión. 🎈🎉💖
+        <div class="card-container">
+            <div class="card" id="card">
+                <div class="card-face card-front">
+                    <p></p>
+                    <div class="flip-indicator">De nuevo da click mi vro↓</div>
+                </div>
+                <div class="card-face card-back">
+                    <img src="img.jpg" alt="Feliz cumpleaños">
+                </div>
+            </div>
         </div>
-    </div>
 
-    <div class="footer">Con cariño, [Tu nombre]</div>
+        <a href="https://vt.tiktok.com/ZShMDyG43/" class="footer" target="_blank"
+            style="text-decoration: none; cursor: pointer;">otra ves da click mi vro</a>
+    </div>
 
     <audio id="bdaySong" preload="auto">
         <source src="https://archive.org/download/cepillin_201910/08-LAS%20MA%C3%91ANITAS.ogg" type="audio/mp3">
@@ -195,37 +504,105 @@
     </audio>
 
     <script>
-        // Globos
-        for (let i = 0; i < 20; i++) {
+        // Globos con colores y movimientos variados
+        const balloonColors = [
+            'linear-gradient(135deg, #ff6b6b, #ff8e8e)',
+            'linear-gradient(135deg, #54a0ff, #2e86de)',
+            'linear-gradient(135deg, #1dd1a1, #10ac84)',
+            'linear-gradient(135deg, #feca57, #ff9f43)',
+            'linear-gradient(135deg, #5f27cd, #341f97)',
+            'linear-gradient(135deg, #ff9ff3, #f368e0)'
+        ];
+
+        for (let i = 0; i < 15; i++) {
             let b = document.createElement('div');
             b.classList.add('balloon');
             b.style.left = Math.random() * 100 + 'vw';
-            b.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
-            b.style.animationDuration = 5 + Math.random() * 5 + 's';
+            b.style.background = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+            b.style.animationDuration = 8 + Math.random() * 10 + 's';
+            b.style.setProperty('--drift', (Math.random() * 2 - 1).toString());
+            b.style.animationDelay = Math.random() * 5 + 's';
+            b.style.scale = 0.7 + Math.random() * 0.6;
             document.body.appendChild(b);
         }
 
-        // Confetti
-        for (let i = 0; i < 100; i++) {
+        // Confetti con formas y colores variados
+        const confettiShapes = ['★', '■', '●', '♦', '♥'];
+        const confettiColors = ['#ff4081', '#3dc2ff', '#ffeb3b', '#4caf50', '#9c27b0', '#ff9800'];
+
+        for (let i = 0; i < 80; i++) {
+            let isShape = Math.random() > 0.5;
+
             let c = document.createElement('div');
             c.classList.add('confetti');
             c.style.left = Math.random() * 100 + 'vw';
-            c.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-            c.style.animationDuration = 2 + Math.random() * 3 + 's';
-            c.style.width = Math.random() * 5 + 3 + 'px';
-            c.style.height = c.style.width;
+
+            if (isShape) {
+                c.style.background = 'transparent';
+                c.style.color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                c.innerHTML = confettiShapes[Math.floor(Math.random() * confettiShapes.length)];
+                c.style.fontSize = Math.random() * 15 + 10 + 'px';
+                c.style.display = 'flex';
+                c.style.alignItems = 'center';
+                c.style.justifyContent = 'center';
+            } else {
+                c.style.backgroundColor = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                c.style.width = Math.random() * 8 + 5 + 'px';
+                c.style.height = c.style.width;
+                c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+            }
+
+            c.style.animationDuration = 3 + Math.random() * 5 + 's';
+            c.style.setProperty('--drift', (Math.random() * 2 - 1).toString());
+            c.style.animationDelay = Math.random() * 5 + 's';
             document.body.appendChild(c);
         }
 
-        // Música
+        // Música con animación
         const playBtn = document.getElementById('playBtn');
         const audio = document.getElementById('bdaySong');
+        const playText = document.getElementById('playText');
+        const musicBars = document.getElementById('musicBars');
 
         playBtn.addEventListener('click', () => {
-            audio.play();
-            playBtn.textContent = "🎶 Reproduciendo...";
-            playBtn.disabled = true;
+            if (audio.paused) {
+                audio.play();
+                playText.textContent = "🎶 Reproduciendo";
+                musicBars.classList.remove('hidden');
+            } else {
+                audio.pause();
+                playText.textContent = "▶ Da click mi vro";
+                musicBars.classList.add('hidden');
+            }
         });
+
+        // Audio termina
+        audio.addEventListener('ended', () => {
+            playText.textContent = "▶ Da click mi vro";
+            musicBars.classList.add('hidden');
+        });
+
+        // Card with interaction cue and full image view
+        const card = document.getElementById('card');
+        card.addEventListener('click', () => {
+            card.classList.toggle('is-flipped');
+
+            // Mejorado: Si la tarjeta está volteada, verificar si es la primera vez
+            if (card.classList.contains('is-flipped')) {
+                // Asegurar que la imagen sea visible al voltear
+                setTimeout(() => {
+                    const cardBackImg = document.querySelector('.card-back img');
+                    if (cardBackImg) {
+                        cardBackImg.style.opacity = '1';
+                    }
+                }, 300);
+            }
+        });
+
+        // Para dispositivos táctiles - mejorar la experiencia
+        document.addEventListener('touchstart', function () {
+            // Esto mejora la respuesta en dispositivos táctiles
+        }, { passive: true });
     </script>
 </body>
 
